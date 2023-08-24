@@ -10,13 +10,13 @@ Don't forget to enable them in your project console
 
 Also you need to install some Python packages,  
 including: *google-api-core*, *google-cloud-translate* etc.,  
-use 
+
+To resolve dependencies use:  
 ```Python
 pip3 install -r requirements.txt
 ```
 
-To run this script simply use
+To run this program, setup variables and after simply use:  
 ```Python
 python3 main.py
 ```
-
