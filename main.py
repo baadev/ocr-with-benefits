@@ -24,38 +24,36 @@ from google.api_core.client_options import ClientOptions
 from google.cloud import documentai
 from google.cloud import translate_v3 as translate
 
-# Set you credentials here
-#
-# For more information, reference this page:
-# https://cloud.google.com/docs/authentication/application-default-credentials
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'path/to/credentials'
-
 # Set your project information
 # 
 # For more information, reference this page:
 # https://cloud.google.com/document-ai/docs/setup
 PROJECT_INFO = {
-    'project_id': '',
-    'location': 'eu',
-    'processor_id': '',
+    'project_id': os.environ.get('PROJECT_ID'),
+    'location': os.environ.get('LOCATION'),
+    'processor_id': os.environ.get('PROCESSOR_ID'),
 }
 
 # You can translate output with Google Translations Service
 #   btw, I don't recomend to do this if quality of input is poor
 TRANSLATION_INFO = {
-    'enabled': False, 
+    'enabled': True if os.environ.get('TRANSLATION_CONSENT') == 'y' else False, 
     'location': 'global',
-    'target_language_code': 'en',
+    'target_language_code': os.environ.get('TRANSLATION_TARGET_LANGUAGE'),
     # 'source_language_code': 'ru', # if not specified, source language will be detected automatically
 }
 
 # Paths to pdf files for OCR
-PATHS = [
-    '',
-]
+PATHS = []
+files_string = os.environ.get('FILES')
+if files_string:
+    PATHS = files_string.split(':')
+else:
+    print('No files specified.')
+    raise SystemExit()
 
 # Output file can be either 'txt' or 'pdf'
-OUTPUT_MODE = 'pdf'
+OUTPUT_FILE_FORMAT = os.environ.get('OUTPUT_FILE_FORMAT')
 
 
 
@@ -166,17 +164,18 @@ def get_text_from_pdf(file_path):
 
 if __name__ == '__main__':
     # Save to .txt file
-    if (OUTPUT_MODE == 'txt'):
+    if (OUTPUT_FILE_FORMAT == 'txt'):
         for path in PATHS:
             text = get_text_from_pdf(path)
             save_to_txt(text, 'result.ocr.txt')
 
     # Save to .pdf file
-    elif (OUTPUT_MODE == 'pdf'):
+    elif (OUTPUT_FILE_FORMAT == 'pdf'):
         text = ''
         for path in PATHS:
             text += f'{get_text_from_pdf(path)}\n'
         save_to_pdf(text, 'result.ocr.pdf')
 
     else:
-        print(f'Unknown output mode{OUTPUT_MODE}')
+        print(f'Unknown output mode{OUTPUT_FILE_FORMAT}')
+        raise SystemExit()
