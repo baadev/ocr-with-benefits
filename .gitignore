@@ -1,1 +1,7 @@
+*.env
 credentials
+
+*.pkl
+
+result.ocr.txt
+result.ocr.pdf

@@ -40,7 +40,6 @@ TRANSLATION_INFO = {
     'enabled': True if os.environ.get('TRANSLATION_CONSENT') == 'y' else False, 
     'location': 'global',
     'target_language_code': os.environ.get('TRANSLATION_TARGET_LANGUAGE'),
-    # 'source_language_code': 'ru', # if not specified, source language will be detected automatically
 }
 
 # Paths to pdf files for OCR
@@ -118,7 +117,6 @@ def translate_text(text: str):
             parent=parent,
             contents=chunk,
             target_language_code=TRANSLATION_INFO['target_language_code'],
-            source_language_code=TRANSLATION_INFO['source_language_code']
         )
 
         # Add the translated texts from the response
